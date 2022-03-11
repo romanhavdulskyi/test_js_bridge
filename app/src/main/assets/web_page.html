@@ -2,12 +2,27 @@
 <html>
 <head>
     <script type="text/javascript">
-function openQRScanner() {
+
+var wifiFetchCounter = 0;
+function getWifiNetworks() {
+    setTimeout(function() {
+        var networks =  Android.getWifiNetwork();
+        console.log("getWifiNetworks [networks: \'" + networks + "\']");
+        wifiFetchCounter++;
+        if (wifiFetchCounter < 1000) {
+            getWifiNetworks();
+        }
+    }, 850)
+ }
+
+ function openQRScanner() {
     Android.openQRScanner('qrCallback');
  }
 function qrCallback(result) {
-    console.log("qrCallback [result: \'" + result + "\']");
+     console.log("qrCallback [result: \'" + result + "\']");
 }
+
+
 
     </script>
     <style>
@@ -25,11 +40,14 @@ function qrCallback(result) {
 
 .buttonGreen {background-color: #4CAF50;} /* Green */
 
+
+
     </style>
 </head>
 <body>
 
 <button onclick="openQRScanner()" class="button buttonGreen">Open QR</button>
+<button onclick="getWifiNetworks()" class="button buttonGreen">Log wifi networks</button>
 
 </body>
 </html>

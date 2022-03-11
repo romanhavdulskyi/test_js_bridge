@@ -1,10 +1,15 @@
 package com.havdulskyi.test_js_bridge
 
 import android.annotation.SuppressLint
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
+import android.webkit.WebChromeClient
 import android.webkit.WebView
-import java.lang.Exception
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -23,8 +28,23 @@ class MainActivity : AppCompatActivity() {
             web.settings.javaScriptCanOpenWindowsAutomatically = true
             web.settings.javaScriptEnabled = true
             web.addJavascriptInterface(js, "Android")
+            web.webChromeClient = WebChromeClient()
         }
         webView?.loadUrl("file:///android_asset/web_page.html")
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        jsInterface?.handlePermissionResult(requestCode, permissions, grantResults)
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        Log.d(this.javaClass.simpleName, "onActivityResult $requestCode $resultCode $data")
+        super.onActivityResult(requestCode, resultCode, data)
     }
 
     override fun onDestroy() {
